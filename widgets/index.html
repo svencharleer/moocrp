@@ -1,0 +1,68 @@
+<html>
+<head>
+    <!--/**
+     * Created by Sven Charleer @ KU Leuven on 30/07/14.
+     */
+         -->
+    <title>LARAe.TT</title>
+    <script type="text/javascript" src="../3rdParty/crossfilter.js"></script>
+    <script type="text/javascript" src="../3rdParty/jquery-2.1.1.min.js"></script>
+    <script type="text/javascript" src="../3rdParty/d3.min.js"></script>
+
+    <script type="text/javascript" src="../data/load.js"></script>
+    <script type="text/javascript" src="eventrelation.js"></script>
+    <link rel="stylesheet" href="eventrelation.css">
+
+    <script type="application/javascript">
+
+        function getUrlParameter(sParam)
+        {
+            var sPageURL = window.location.search.substring(1);
+            var sURLVariables = sPageURL.split('&');
+            for (var i = 0; i < sURLVariables.length; i++) 
+            {
+                var sParameterName = sURLVariables[i].split('=');
+                if (sParameterName[0] == sParam) 
+                {
+                    return sParameterName[1];
+                 }
+             }
+         }
+
+        function loadWidgets()
+        {
+            var actors = getUrlParameter("actor").split("_");
+
+            var xf = crossfilter(__data);
+            var byUser = xf.dimension(
+                function(d){
+                    
+                     return d.actor;
+                });
+
+            byUser.filter(function(d){
+                return actors.indexOf(d.toString()) >= 0;}
+                );
+
+            var main =  new eventRelation();
+            main.init(byUser.top("Infinity"), "Total","#mainVisualization","#content",actors);
+        }
+
+    </script>
+</head>
+<body onload="javascript:load(loadWidgets);">
+
+
+<div id="mainVisualization">
+
+</div>
+
+
+<div id="content">
+    
+</div>
+
+
+
+</body>
+</html>
